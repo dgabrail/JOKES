@@ -1,4 +1,3 @@
-export interface MovieName {
-    name: string
-    id: string
+export interface MovieType {
+    movie: string;
 }

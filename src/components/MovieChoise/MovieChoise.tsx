@@ -1,27 +1,55 @@
 import React, { Component, MouseEventHandler } from 'react'
-import { MovieName } from '../../types';
+import { MovieType } from '../../types';
+import Movie from '../Movie/Movie';
 
-interface Props {
-  id: string;
-  nameMovie: string
-  remove: React.MouseEventHandler
-  name: React.ChangeEventHandler<HTMLInputElement>
-  Movies: MovieName[]
+interface State {
+  movies: MovieType[];
+  movie: MovieType;
 }
 
-class MovieChoise extends Component<Props> {
+class MovieChoise extends Component<{}, State> {
+  state: State = {
+    movies: [],
+    movie: { movie: '' }
+  };
 
-  shouldComponentUpdate(nextProps: Readonly<Props>, ): boolean {
-    if(this.props.name === nextProps.name && this.props.Movies === nextProps.Movies){
-      return false
-    }
-    return true
-  }
+  addMovie() {
+    this.state.movies.push(this.state.movie);
+    this.setState({
+      movies: this.state.movies
+    })
+  };
+
+  newMovie(e: React.ChangeEvent<HTMLInputElement>) {
+    this.setState(prev => ({
+      ...prev,
+      movie: { movie: e.target.value }
+    }))
+  };
+
+  changeTitleMovie(e: React.ChangeEvent<HTMLInputElement>, index: number) {
+    const newMovie: MovieType = { movie: e.target.value };
+    this.state.movies[index] = newMovie;
+    this.setState({
+      movies: this.state.movies
+    })
+  };
+
+  deleteMovie(index: number) {
+    this.state.movies.splice(index, 1);
+    this.setState({
+      movies: this.state.movies
+    })
+  };
+
   render() {
     return (
-      <div style={{marginTop:'10px'}}>
-        <input onChange={this.props.name}  value={this.props.nameMovie} type="text"/>
-        <button onClick={this.props.remove}>X</button>
+      <div style={{ marginTop: '10px' }}>
+        <input type="text" onChange={e => this.newMovie(e)} />
+        <button onClick={() => this.addMovie()}>Add</button>
+        {this.state.movies.map((movie, index) => (
+          <Movie deleteMovie={() => this.deleteMovie(index)} changeTitleMovie={e => this.changeTitleMovie(e, index)} index={index} movieTitle={movie.movie} key={JSON.stringify(index)} />
+        ))}
       </div>
     )
   }

@@ -1,28 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Joke from '../Joke/Joke';
+const URL = 'https://v2.jokeapi.dev/joke/Programming';
 
-const URL = 'https://v2.jokeapi.dev/joke/Programming'
 const Jokes = () => {
-  const [jok, setJok] = useState('')
-  
+  const [joke, setJoke] = useState('');
+
   const newJok = async () => {
-    const reqest = await axios(URL)
-    setJok(reqest.data.joke)
+    const reqest = await axios(URL);
+    if (reqest.data.joke === undefined) {
+      setJoke('No joke yet');
+    } else { setJoke(reqest.data.joke) }
   }
 
   useEffect(() => {
-    newJok()
-  }, [])
+    newJok();
+  }, []);
 
   return (
-    <div style={{ border: '1px solid black', margin: '30px', textAlign: 'left' }}>
-      <div style={{ margin: '10px' }}>
-        <div>
-          <p>{jok}</p>
-        </div>
-        <button className='btn btn-success' onClick={newJok}>New jok</button>
-      </div>
-    </div>
+    <div>
+      <Joke joke={joke} />
+      <button className='btn btn-success' onClick={newJok}>New jok</button>
+    </div >
   )
 }
 
